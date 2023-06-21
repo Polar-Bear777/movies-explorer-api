@@ -1,30 +1,59 @@
+const { compare } = require('bcryptjs');
 const mongoose = require('mongoose');
-const { isEmail } = require('validator');
+const { userErrorsMessages } = require('../constants/constants');
+const { UnauthorizedError } = require('../errors/UnauthorizedError');
+const { EMAIL_REGEX } = require('../regex');
 
-const userSchema = new mongoose.Schema({
-  email: {
-    type: String,
-    validate: {
-      validator: (value) => {
-        if (!isEmail(value)) {
-          throw new Error('Некорректный формат электронной почты');
-        }
+const { Schema } = mongoose;
+
+const userSchema = new Schema(
+  {
+    name: {
+      required: true,
+      type: String,
+      validate: {
+        validator: ({ length }) => length >= 2 && length <= 30,
+        message: 'Длина имени пользователя от 2 до 30 символов',
       },
     },
-    required: true,
-    unique: true,
+
+    password: {
+      required: true,
+      type: String,
+      select: false,
+    },
+
+    email: {
+      required: true,
+      type: String,
+      unique: true,
+      validate: {
+        validator: (email) => EMAIL_REGEX.test(email),
+        message: 'Введите электронную почту',
+      },
+    },
   },
-  password: {
-    type: String,
-    required: true,
-    select: false,
+
+  {
+    statics: {
+      findUserByCredentials(email, password) {
+        return (
+          this.findOne({ email })
+            .select('+password')
+        )
+          .then((user) => {
+            if (user) {
+              return compare(password, user.password)
+                .then((matched) => {
+                  if (matched) return user;
+                  return Promise.reject(new UnauthorizedError(userErrorsMessages.validation));
+                });
+            }
+            return Promise.reject(new UnauthorizedError(userErrorsMessages.validation));
+          });
+      },
+    },
   },
-  name: {
-    type: String,
-    required: true,
-    minlength: 2,
-    maxlength: 30,
-  },
-}, { versionKey: false });
+);
 
 module.exports = mongoose.model('user', userSchema);

@@ -1,33 +1,17 @@
 const router = require('express').Router();
-const { errors } = require('celebrate');
-const moviesRouter = require('./movies');
-const usersRouter = require('./users');
-
 const NotFoundError = require('../errors/NotFoundError');
+const auth = require('../middlewares/auth');
+const { authErrorMessage } = require('../constants/constants');
+const routeSignup = require('./signup');
+const routeSignin = require('./signin');
+const routeMovies = require('./movies');
+const routeUsers = require('./users');
 
-const { login, createUser, logout } = require('../controllers/users');
-const { createUserJoi, loginJoi } = require('../middlewares/validation');
-const { errorLogger } = require('../middlewares/logger');
-// const authMiddleware = require('../middlewares/auth');
-
-// проверяет переданные в теле почту и пароль
-// и возвращает JWT
-router.post('/signin', loginJoi, login);
-
-// создаёт пользователя с переданными в теле
-// email, password и name
-router.post('/signup', createUserJoi, createUser);
-
-// дополнительный роут при сохранении в куках
-router.get('/signout', logout);
-
-// router.use(authMiddleware);
-router.use('/users', usersRouter);
-router.use('/movies', moviesRouter);
-router.use('/*', (req, res, next) => {
-  next(new NotFoundError('Страница не найдена'));
-});
-router.use(errorLogger);
-router.use(errors({ message: 'Ошибка валидации данных!' }));
+router.use('/', routeSignin);
+router.use('/', routeSignup);
+router.use(auth);
+router.use('/movies', routeMovies);
+router.use('/users', routeUsers);
+router.use((req, res, next) => next(new NotFoundError(authErrorMessage)));
 
 module.exports = router;

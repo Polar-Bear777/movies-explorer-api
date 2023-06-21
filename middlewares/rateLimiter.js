@@ -1,11 +1,11 @@
 const rateLimiter = require('express-rate-limit');
+const { rateLimiterErrorsMessages } = require('../constants/constants');
 
 // Настройка Ограничителя скорости
-const apiRateLimiter = rateLimiter({
-  windowMs: 10 * 60 * 1000,
-  max: 100,
-  standardHeaders: true,
-  legacyHeaders: false,
+const limiter = rateLimiter({
+  windowMs: 1000,
+  max: 10,
+  message: rateLimiterErrorsMessages.conflict,
 });
 
-module.exports = { apiRateLimiter };
+module.exports = limiter;
