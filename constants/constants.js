@@ -3,6 +3,7 @@ const singoutMessage = 'До свидания!';
 const authErrorMessage = 'Неавторизован, требуется аутентификация';
 const notFoundPage = 'Необходима авторизация';
 
+// Для юзера
 const userErrorsMessages = {
   notfound: 'Пользователь по указанному id не найден.',
   conflict: 'Пользователь с указанным e-mail уже зарегистрирован.',
@@ -12,6 +13,7 @@ const userErrorsMessages = {
   resurs: 'Запрашиваемый ресурс не найден',
 };
 
+// Для фильмов
 const movieErrorsMessages = {
   notfound: 'Фильм с указанным id не найден.',
   forbidden: 'У Вас нет прав на удаление этого фильма.',
