@@ -74,17 +74,14 @@ function updateUserInfo(req, res, next) {
         runValidators: true,
       },
     )
-    .then((user) => {
-      if (user) return res.send(user);
-      throw new NotFoundError(userErrorsMessages.notfound);
-    })
+    .then((user) => res.status(200)
+      .send({ data: user }))
     .catch((err) => {
       if (err.name === 'DocumentNotFoundError') {
         next(new NotFoundError(userErrorsMessages.resurs));
       } else {
         next(err);
       }
-      return next(err);
     });
 }
 
