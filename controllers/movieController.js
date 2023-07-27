@@ -74,7 +74,9 @@ function deleteMovie(req, res, next) {
       if (movieOwnerId.valueOf() !== userId) throw new ForbiddenError(movieErrorsMessages.forbidden);
 
       movie.deleteOne()
-        .then(() => res.send(movieErrorsMessages.message))
+        .then((movieData) => {
+          res.send(movieData);
+        })
         .catch(next);
     })
     .catch(next);
