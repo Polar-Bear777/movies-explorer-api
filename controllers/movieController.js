@@ -52,7 +52,8 @@ function createMovie(req, res, next) {
     })
     .then(() => res.status(201).send(movieErrorsMessages.add))
     .catch((err) => {
-      if (err.name === 'ValidationError') next(new BadRequestError(movieErrorsMessages.validation));
+      console.log(err);
+      if (err.name === 'ValidationError') next(new BadRequestError('хуйвфывся'));
       else next(err);
     });
 }

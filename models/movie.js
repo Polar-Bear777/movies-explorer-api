@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const { URL_REGEX } = require('../middlewares/validation');
+const validator = require('validator');
+// const { URL_REGEX } = require('../middlewares/validation');
 
 const { Schema } = mongoose;
 const { ObjectId } = Schema.Types;
@@ -32,29 +33,35 @@ const movieSchema = new Schema(
     },
 
     image: {
-      required: true,
       type: String,
+      required: [true, 'Поле "image" должно быть заполнено'],
       validate: {
-        validator: (url) => URL_REGEX.test(url),
-        message: 'Введите URL',
+        validator(image) {
+          return validator.isURL(image);
+        },
+        message: '400 Введён некорректный image-link',
       },
     },
 
     trailer: {
-      required: true,
       type: String,
+      required: [true, 'Поле "image" должно быть заполнено'],
       validate: {
-        validator: (url) => URL_REGEX.test(url),
-        message: 'Введите URL',
+        validator(image) {
+          return validator.isURL(image);
+        },
+        message: '400 Введён некорректный image-link',
       },
     },
 
     thumbnail: {
       type: String,
-      required: true,
+      required: [true, 'Поле "image" должно быть заполнено'],
       validate: {
-        validator: (url) => URL_REGEX.test(url),
-        message: 'Введите URL',
+        validator(image) {
+          return validator.isURL(image);
+        },
+        message: '400 Введён некорректный image-link',
       },
     },
 
