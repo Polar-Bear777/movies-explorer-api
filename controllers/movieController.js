@@ -50,7 +50,9 @@ function createMovie(req, res, next) {
       owner: _id,
       movieId,
     })
-    .then(() => res.status(201).send(movieErrorsMessages.add))
+    .then((movie) => {
+      res.send(movie);
+    })
     .catch((err) => {
       console.log(err);
       if (err.name === 'ValidationError') next(new BadRequestError('хуйвфывся'));
