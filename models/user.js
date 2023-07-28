@@ -1,7 +1,8 @@
 const { compare } = require('bcryptjs');
 const mongoose = require('mongoose');
 const { userErrorsMessages } = require('../constants/constants');
-const { UnauthorizedError } = require('../errors/UnauthorizedError');
+const UnauthorizedError = require('../errors/UnauthorizedError');
+
 const { EMAIL_REGEX } = require('../regex');
 
 const { Schema } = mongoose;
@@ -46,10 +47,10 @@ const userSchema = new Schema(
               return compare(password, user.password)
                 .then((matched) => {
                   if (matched) return user;
-                  return Promise.reject(new UnauthorizedError(userErrorsMessages.validation));
+                  return Promise.reject(new UnauthorizedError(userErrorsMessages.auth));
                 });
             }
-            return Promise.reject(new UnauthorizedError(userErrorsMessages.validation));
+            return Promise.reject(new UnauthorizedError(userErrorsMessages.auth));
           });
       },
     },

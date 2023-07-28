@@ -5,13 +5,13 @@ const NotFoundError = require('../errors/NotFoundError');
 const ConflictError = require('../errors/ConflictError');
 const { userErrorsMessages } = require('../constants/constants');
 const { NODE_ENV, JWT_SECRET } = require('../config');
-const { PASSWORD_REGEX } = require('../regex');
+// const { PASSWORD_REGEX } = require('../regex');
 const User = require('../models/user');
 
 function login(req, res, next) {
   const { email, password } = req.body;
 
-  if (!PASSWORD_REGEX.test(password)) throw new BadRequestError(userErrorsMessages.auth);
+  // if (!PASSWORD_REGEX.test(password)) throw new BadRequestError(userErrorsMessages.auth);
 
   User
     .findUserByCredentials(email, password)
