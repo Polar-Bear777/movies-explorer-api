@@ -35,7 +35,14 @@ function createUser(req, res, next) {
       email,
       password: hash,
     }))
-    .then(() => res.status(201).send(userErrorsMessages.message))
+    .then((user) => {
+      const { _id } = user;
+      res.send({
+        _id,
+        name,
+        email,
+      });
+    })
     .catch((err) => {
       if (err.code === 11000) next(new ConflictError(userErrorsMessages.conflict));
       else if (err.name === 'ValidationError') next(new BadRequestError(userErrorsMessages.validation));
